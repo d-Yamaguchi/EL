@@ -1,0 +1,14 @@
+fibo(n) :: Int -> Int
+  = 0 [n == 0]
+     where x = {1...10}
+           y = {1,2,3,4}
+  = 1 [n == 1]
+  = fibo(n-1) + fibo(n-2) [otherwise]
+  where n :: Int
+          = 2
+
+m :: Int
+= 3
+
+
+z = {x*2;x<1.5,x<-{1.1...1.9}}

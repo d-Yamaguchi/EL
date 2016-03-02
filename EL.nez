@@ -1,0 +1,83 @@
+//EL var3.1
+//lastModified: 2016/03/02
+// kensuke.tamura.183@gmail.com
+
+chank = { _  $(decl)  ('\n'  ( !('\n') _  / '\n')+ $(decl))* _ #Source}
+decl = iodecl / funcdecl / vardecl / listdecl
+
+//iodecl's structure
+iodecl = in / out
+in = { 'cin' _ '>>' _ $target(name) #In}
+out = { 'cout' _ '<<' _ $target(value) #Out}
+
+//funcdecl's leftside tree
+funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ '::' _ $typelist(typelist) ('\n' $return(returnlist))? '\n' $othwiseret(othwiseret) #Funcdecl}
+name = { !keyword ([0-9] / [a-z] / [A-Z] / '_')+ #Name}
+arglist = name {$left _ ',' _ $right(arglist) #Arglist}*
+arglist2 = value {$left _ ',' _ $right(arglist2) #ArglistII}*
+typelist = type {$left _ '->' _ $right(typelist) #Typelist}*
+type = elemtype / tapletype / listtype
+tapletype = '(' type {$left ',' $right(type) #Tapletype}* ')'
+listtype = '{' { $(type) #Listtype}'}'
+elemtype = {'Int' / 'Double' / 'String' / 'Bool' #Elemtype}
+returnlist = return {$left '\n' $right(returnlist) #Returnlist}*
+return = { $space(indent) '=' _ $retval(value) _ '[' _ $retcase(returncase) _ ']' $where(whereblock)? #Return}
+othwiseret = { $space(indent) '=' _ $retval(value) ( _ '['_ 'otherwise' _ ']' )? $where(whereblock)? #OthWiseRet}
+returncase = exp {$left _ ',' _ $right(exp) #Returncase}*
+indent = { space* #Indent}
+whereblock = { '\n' $spaceleft(indent) 'where' $spaceright(indent) $declist(declist) #Where}
+declist = vldecl {$left '\n' $space(indent) $right( vldecl ) #Declist}*
+
+//functioncall
+funcCall = { $name(name) '(' _ $arglist(arglist2) _ ')' #FuncCall}
+
+//value
+value = exp / listset / taple
+
+//list's tree
+listset = CList / RList / List
+List = {'{' _ ( $(value) _ $(',' _ value )*)? _ '}'#List}
+RList = {'{' _ (( $lower(numeral / literalString) _ '...' _ $upper(numeral / literalString) ) / ( $left(numeral / literalString) _ ',' _ $lower(numeral / literalString) _ '...' _ $upper(numeral / literalString))) _ '}' #RList}
+CList = {'{' _  $left(exp) _';' _ $right(condition) _ '}' #CList}
+condition = (of/exp) {$left _ ',' _ $right(of/exp) #Condition}*
+of = value {$left ( _ '<-' #Of _ $right(listset)) }*
+
+//taple's tree
+taple = {'(' _ ( $left(value) _ $right(',' _ value )*)? _ ')' #Taple}
+
+//vardecl tree
+vldecl = vardecl / listdecl
+vardecl = { $name(name) _ '::' _ $type(type) '\n' $space(indent) '=' _ !listset $value(value) #Vardecl}
+listdecl = { $name(name) _ '=' _ $list(listset) #Listdecl}
+
+//expression
+exp = exp0 {$left ( _ ('&&' #And / '||' #Or) _ $right(exp0)) }*
+exp0 = exp1 {$left ( _ ('==' #Equals / '!=' #NotEquals) _ $right(exp1)) }*
+exp1 = exp2 {$left ( _ ('<=' #LessThanEquals / '<' #LessThan / '>=' #GreaterThanEquals / '>' #GreaterThan) _ $right(exp2)) }*
+exp2 = exp3 {$left ( _ '|' #Bit_Or _ $right(exp3)) }*
+exp3 = exp4 {$left ( _ '~' #Bit_Exor _ $right(exp4)) }*
+exp4 = exp5 {$left ( _ '&' #Bit_And _ $right(exp5)) }*
+exp5 = exp6 {$left ( _ ('<<' #Left_shift / '>>' #Right_shift) _ $right(exp6)) }*
+exp6 = exp7 {$left ( _ ('+' #Add / '-' #Sub) _ $right(exp7)) }*
+exp7 = exp8 {$left ( _ ('*' #Mul / '/' #Div) _ $right(exp8)) }*
+exp8 = exp9 {$left ( _ ('//' #Div_Int / '%' #Mod) _ $right(exp9)) }*
+exp9 = exps {$left ( _ '^' #Power _ $right(exps)) }*
+exps =  nil / false / true / numeral / literalString / funcCall / name / { $(unop) $(exp) #Unop}
+
+unop = {'-' #Minus} / {'!' #Not}  / {'~' #Bit_Not}
+
+//tarminal element
+numeral = double / integer
+integer = {([1-9] [0-9]* / '0') #Integer}
+double = {([1-9] [0-9]* / '0') '.' [0-9]+  #Double}
+literalString = {('"' ([0-9] / [a-z] / [A-Z] / '_')+ '"') #LiteralString}
+nil = {'nil' #Nil}
+false = {'false' #False}
+true = {'true' #True}
+
+//EL's keyword
+keyword = 'otherwise' / 'Int' / 'Double' / 'String' / 'Bool' / 'nil' / 'true' / 'false'
+
+space = ' '
+S = [ \t\n\r]
+_ = S*
