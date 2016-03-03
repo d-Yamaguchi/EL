@@ -1,8 +1,7 @@
-//EL var3.1
-//lastModified: 2016/03/02
-// kensuke.tamura.183@gmail.com
+//EL var3.14
+//lastModified: 2016/03/03
 
-chank = { _  $(decl)  ('\n'  ( !('\n') _  / '\n')+ $(decl))* _ #Source}
+chunk = { S*  $(decl)  ('\n' S+ $(decl))* S* #Source}
 decl = iodecl / funcdecl / vardecl / listdecl
 
 //iodecl's structure
@@ -11,7 +10,7 @@ in = { 'cin' _ '>>' _ $target(name) #In}
 out = { 'cout' _ '<<' _ $target(value) #Out}
 
 //funcdecl's leftside tree
-funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ '::' _ $typelist(typelist) ('\n' $return(returnlist))? '\n' $othwiseret(othwiseret) #Funcdecl}
+funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ '::' _ $typelist(typelist) ('\n' $return(returnlist))? '\n' $othwiseret(othwiseret) $where(whereblock)? #Funcdecl}
 name = { !keyword ([0-9] / [a-z] / [A-Z] / '_')+ #Name}
 arglist = name {$left _ ',' _ $right(arglist) #Arglist}*
 arglist2 = value {$left _ ',' _ $right(arglist2) #ArglistII}*
@@ -21,12 +20,11 @@ tapletype = '(' type {$left ',' $right(type) #Tapletype}* ')'
 listtype = '{' { $(type) #Listtype}'}'
 elemtype = {'Int' / 'Double' / 'String' / 'Bool' #Elemtype}
 returnlist = return {$left '\n' $right(returnlist) #Returnlist}*
-return = { $space(indent) '=' _ $retval(value) _ '[' _ $retcase(returncase) _ ']' $where(whereblock)? #Return}
-othwiseret = { $space(indent) '=' _ $retval(value) ( _ '['_ 'otherwise' _ ']' )? $where(whereblock)? #OthWiseRet}
+return = { _ '=' _ $retval(value) _ '[' _ $retcase(returncase) _ ']' #Return}
+othwiseret = { _ '=' _ $retval(value) ( _ '['_ 'otherwise' _ ']' )? #OthWiseRet}
 returncase = exp {$left _ ',' _ $right(exp) #Returncase}*
-indent = { space* #Indent}
-whereblock = { '\n' $spaceleft(indent) 'where' $spaceright(indent) $declist(declist) #Where}
-declist = vldecl {$left '\n' $space(indent) $right( vldecl ) #Declist}*
+whereblock = { '\n' _ 'where'  _ '\n' _ $declist(declist) #Where}
+declist = vldecl {$left '\n' _ $right( vldecl ) #Declist}*
 
 //functioncall
 funcCall = { $name(name) '(' _ $arglist(arglist2) _ ')' #FuncCall}
@@ -47,7 +45,7 @@ taple = {'(' _ ( $left(value) _ $right(',' _ value )*)? _ ')' #Taple}
 
 //vardecl tree
 vldecl = vardecl / listdecl
-vardecl = { $name(name) _ '::' _ $type(type) '\n' $space(indent) '=' _ !listset $value(value) #Vardecl}
+vardecl = { $name(name) _ '::' _ $type(type) '\n' _ '=' _ !listset $value(value) #Vardecl}
 listdecl = { $name(name) _ '=' _ $list(listset) #Listdecl}
 
 //expression
@@ -76,8 +74,7 @@ false = {'false' #False}
 true = {'true' #True}
 
 //EL's keyword
-keyword = 'otherwise' / 'Int' / 'Double' / 'String' / 'Bool' / 'nil' / 'true' / 'false'
+keyword = 'otherwise' / 'Int' / 'Double' / 'String' / 'Bool' / 'nil' / 'true' / 'false' / 'where' / 'cin' / 'cout'
 
-space = ' '
 S = [ \t\n\r]
-_ = S*
+_ = [ \t]*
