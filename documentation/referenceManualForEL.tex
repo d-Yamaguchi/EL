@@ -35,12 +35,14 @@ $\;$\\
 %\listoftables
 \mainmatter
 \chapter{Language Guide}
-\section{the basics}
 %EL特徴のあらまし
 \section{types}
 %提供している型について
+\EL\;provides fundamental types, including \texttt{Int} for integers, \texttt{Double} for floating-point values, \texttt{String} for textual data, and \texttt{Bool} for Boolean value.
+\EL\;also provides Tuple and List as described in \S 1.3, \S1.4.
 \section{constants}
 %定数は使えますが，変数は使えません(参照透過性)
+You cannot use variable in \EL-world. Alternatively, \EL\;provides constant. The value of a constant cannot be changed once it is set in the future. This constraint ensures referential transparency.
 \section{list}
 %リストには3通りの記述方法があります
 \section{tuple}
