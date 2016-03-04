@@ -1,23 +1,60 @@
-\documentclass[openany]{jsbook}
-\usepackage{dnjbook}
+\AtBeginDvi{\special{pdf: pagesize width 182truemm height 257truemm}} 
+\documentclass[openany,b5j,11pt,english]{jsbook}
+\usepackage{dnjbook,rsfs}
+\setlength{\topmargin}{-2truecm}
+\setlength{\textheight}{22truecm}
 \def\EL{\reflectbox{E}\kern-.3em\hbox{L}}
-\title{\underline{{\HUGE $\;\:$\textit{The Reference Manual for} \EL$\;\:$}}\\Version 3.1}
+\title{\underline{{\huge $\;\:$\textit{The Reference Manual for} \EL$\;\:$}}\\Version 3.14}
 \author{The \EL \;Development Team}
 \date{\today}
+\lstset{
+  showspaces=false,
+  showtabs=false,
+  breaklines=true,
+  showstringspaces=false,
+  breakatwhitespace=true,
+  commentstyle=\color{pgreen},
+  keywordstyle=\color{pblue},
+  stringstyle=\color{pred},
+  basicstyle={\small,\ttfamily},%
+  moredelim=[il][\textcolor{pgrey}]{$$},
+  moredelim=[is][\textcolor{pgrey}]{\%\%}{\%\%},
+  numbers=left,stepnumber=1,numberstyle=\footnotesize,
+  frame=tRBl,framesep=5pt,
+  classoffset=1,%
+}
 \begin{document}
-\begin{fullwidthpage}
 \maketitle
-\end{fullwidthpage}
 \frontmatter
 \setcounter{page}{0}
 \thispagestyle{empty}
 $\;$\\
 \newpage
-\begin{fullwidthpage}
 \tableofcontents
-\listoffigures
+%\listoffigures
 %\listoftables
-\end{fullwidthpage}
 \mainmatter
+\chapter{Language Guide}
+\section{the basics}
+%EL特徴のあらまし
+\section{types}
+%提供している型について
+\section{constants}
+%定数は使えますが，変数は使えません(参照透過性)
+\section{function}
+%ELの関数の特徴は必ず値を返すことです．
+\section{control flow}
+%パターンマッチと再帰で
+\chapter{Usage}
+\section{declare constants}
+\section{declare function}
+\lstinputlisting[caption=function $fibo(n)$,label=fibo]
+{../test/fibo.txt}
+\section{pattern match}
+\section{Input and Output}
+\section{sample code}
+Here is the sample code, which returns a fibonacci number.
+\lstinputlisting[caption=sample code,label=sample]
+{../test/test.txt}
 
 \end{document}
