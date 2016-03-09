@@ -1,5 +1,5 @@
-//EL var3.14
-//lastModified: 2016/03/03
+//EL ver3.141
+//lastModified: 2016/03/09
 
 chunk = { S*  $(decl)  ('\n' S+ $(decl))* S* #Source}
 decl = iodecl / funcdecl / vardecl / listdecl
@@ -11,7 +11,7 @@ out = { 'cout' _ '<<' _ $target(value) #Out}
 
 //funcdecl's leftside tree
 funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ '::' _ $typelist(typelist) ('\n' $return(returnlist))? '\n' $othwiseret(othwiseret) $where(whereblock)? #Funcdecl}
-name = { !keyword ([0-9] / [a-z] / [A-Z] / '_')+ #Name}
+name = { !keyword ([a-z] / [A-Z])+ ([0-9] / [a-z] / [A-Z] / '_')* #Name}
 arglist = name {$left _ ',' _ $right(arglist) #Arglist}*
 arglist2 = value {$left _ ',' _ $right(arglist2) #ArglistII}*
 typelist = type {$left _ '->' _ $right(typelist) #Typelist}*
@@ -59,7 +59,8 @@ exp5 = exp6 {$left ( _ ('<<' #Left_shift / '>>' #Right_shift) _ $right(exp6)) }*
 exp6 = exp7 {$left ( _ ('+' #Add / '-' #Sub) _ $right(exp7)) }*
 exp7 = exp8 {$left ( _ ('*' #Mul / '/' #Div) _ $right(exp8)) }*
 exp8 = exp9 {$left ( _ ('//' #Div_Int / '%' #Mod) _ $right(exp9)) }*
-exp9 = exps {$left ( _ '^' #Power _ $right(exps)) }*
+exp9 = exp10 {$left ( _ '^' #Power _ $right(exp10)) }*
+exp10 = exps {$left ( _ ('!!' #LookUp / '++' #Connect) _ $right(exps)) }*
 exps =  nil / false / true / numeral / literalString / funcCall / name / { $(unop) $(exp) #Unop}
 
 unop = {'-' #Minus} / {'!' #Not}  / {'~' #Bit_Not}
@@ -68,7 +69,7 @@ unop = {'-' #Minus} / {'!' #Not}  / {'~' #Bit_Not}
 numeral = double / integer
 integer = {([1-9] [0-9]* / '0') #Integer}
 double = {([1-9] [0-9]* / '0') '.' [0-9]+  #Double}
-literalString = {('"' ([0-9] / [a-z] / [A-Z] / '_')+ '"') #LiteralString}
+literalString = {('"' ([0-9a-zA-Z] / '_' / ',' / '?')+ '"') #LiteralString}
 nil = {'nil' #Nil}
 false = {'false' #False}
 true = {'true' #True}
