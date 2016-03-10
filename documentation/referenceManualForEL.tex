@@ -4,7 +4,7 @@
 \setlength{\topmargin}{-2truecm}
 \setlength{\textheight}{22truecm}
 \def\EL{\reflectbox{E}\kern-.3em\hbox{L}}
-\title{\underline{{\huge $\;\:$\textit{The Reference Manual for} \EL$\;\:$}}\\Version 3.14}
+\title{\underline{{\huge $\;\:$\textit{The Reference Manual for} \EL$\;\:$}}\\Version 3.141}
 \author{The \EL \;Development Team}
 \date{\today}
 \lstset{
@@ -45,14 +45,27 @@ $\;$\\
 You cannot use variable. Alternatively, \EL\;provides constant. The value of a constant cannot be changed once it is set in the future. This constraint ensures referential transparency.
 \section{list}
 %リストには3通りの記述方法があります
+In \EL, lists are a homogenous data structure. 
+It stores several elements of the same type.
+List can be written in three different ways (Enumeration, Range , List comprehension).
+It should be noted that you don't have to declare the list with its type.
 \section{tuple}
 %タプルが使えます
+\EL\;provide tuple type. You can bound some values with tuple and handle as an unit value.
 \section{function}
 %ELの関数の特徴は必ず値を返すことです．
+In \EL, you must define function to return just a value.
+Besides, you must declare types of each arguments and type of the return value. 
+Using constants locally, You could declare them in \texttt{where} block below the function.
 \section{control flow}
 %パターンマッチと再帰で
+\EL\;provide only pattern-mach for control flow. Any conditional balancing you need is constructed with pattern-mach and several recursive call.
 \chapter{Usage}
 \section{declare constants}
+\subsection{declare constant}
+
+\subsection{declare list}
+
 \section{declare function}
 \lstinputlisting[caption=function $fibo(n)$,label=fibo]
 {../test/fibo.txt}
