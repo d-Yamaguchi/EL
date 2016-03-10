@@ -63,8 +63,23 @@ Using constants locally, You could declare them in \texttt{where} block below th
 \chapter{Usage}
 \section{declare constants}
 \subsection{declare constant}
-
+In this section, we describe the way to declare a constant.
+Here is the sample code to decleare $n = 2$.
+\lstinputlisting[caption=declare a constant \texttt{n},label=constDecl]
+{../test/constDecl.txt}
+In the first line, declare type of the constant named \texttt{n}. This time \texttt{n} is \texttt{Int} type.
+Then, describe the value of \texttt{n} in the right hand of "\texttt{=}" in the second line. 
 \subsection{declare list}
+In this section, we describe the way to declare a list.
+Here is a sample code to declare a list, which holds \texttt{Int} datas \texttt{\{1,2,3,4,5\}}. 
+\lstinputlisting[caption=declare a list \texttt{listA},label=listDecl1]
+{../test/listDecl1.txt}
+You could declare a list without type declaration.
+You need only single line to declare a list like that example.\\
+
+We could also describe same list with \textsf{Range} expression like this.
+\lstinputlisting[caption=declare a list \texttt{listA} with \texttt{Range},label=listDecl2]
+{../test/listDecl2.txt}
 
 \section{declare function}
 \lstinputlisting[caption=function $fibo(n)$,label=fibo]
